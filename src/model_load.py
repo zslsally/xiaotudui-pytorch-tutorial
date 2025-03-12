@@ -3,6 +3,7 @@
 # 公众号：土堆碎念
 import torch
 from model_save import *
+
 # 方式1-》保存方式1，加载模型
 import torchvision
 from torch import nn
@@ -26,5 +27,6 @@ vgg16.load_state_dict(torch.load("vgg16_method2.pth"))
 #         x = self.conv1(x)
 #         return x
 
-model = torch.load('tudui_method1.pth')
+# 会报错Tudui not defined, 需要把Tudui定义复制过来或import
+model = torch.load("tudui_method1.pth")
 print(model)

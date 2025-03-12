@@ -4,15 +4,24 @@
 
 import torchvision
 from torch.utils.tensorboard import SummaryWriter
+import torch
 
 # 准备数据集
 from torch import nn
 from torch.utils.data import DataLoader
 
-train_data = torchvision.datasets.CIFAR10(root="../data", train=True, transform=torchvision.transforms.ToTensor(),
-                                          download=True)
-test_data = torchvision.datasets.CIFAR10(root="../data", train=False, transform=torchvision.transforms.ToTensor(),
-                                         download=True)
+train_data = torchvision.datasets.CIFAR10(
+    root="../dataset",
+    train=True,
+    transform=torchvision.transforms.ToTensor(),
+    download=True,
+)
+test_data = torchvision.datasets.CIFAR10(
+    root="../dataset",
+    train=False,
+    transform=torchvision.transforms.ToTensor(),
+    download=True,
+)
 
 # length 长度
 train_data_size = len(train_data)
@@ -26,6 +35,7 @@ print("测试数据集的长度为：{}".format(test_data_size))
 train_dataloader = DataLoader(train_data, batch_size=64)
 test_dataloader = DataLoader(test_data, batch_size=64)
 
+
 # 创建网络模型
 class Tudui(nn.Module):
     def __init__(self):
@@ -38,13 +48,15 @@ class Tudui(nn.Module):
             nn.Conv2d(32, 64, 5, 1, 2),
             nn.MaxPool2d(2),
             nn.Flatten(),
-            nn.Linear(64*4*4, 64),
-            nn.Linear(64, 10)
+            nn.Linear(64 * 4 * 4, 64),
+            nn.Linear(64, 10),
         )
 
     def forward(self, x):
         x = self.model(x)
         return x
+
+
 tudui = Tudui()
 
 # 损失函数
@@ -65,10 +77,10 @@ total_test_step = 0
 epoch = 10
 
 # 添加tensorboard
-writer = SummaryWriter("../logs_train")
+writer = SummaryWriter("logs/train")
 
 for i in range(epoch):
-    print("-------第 {} 轮训练开始-------".format(i+1))
+    print("-------第 {} 轮训练开始-------".format(i + 1))
 
     # 训练步骤开始
     tudui.train()
@@ -101,9 +113,9 @@ for i in range(epoch):
             total_accuracy = total_accuracy + accuracy
 
     print("整体测试集上的Loss: {}".format(total_test_loss))
-    print("整体测试集上的正确率: {}".format(total_accuracy/test_data_size))
+    print("整体测试集上的正确率: {}".format(total_accuracy / test_data_size))
     writer.add_scalar("test_loss", total_test_loss, total_test_step)
-    writer.add_scalar("test_accuracy", total_accuracy/test_data_size, total_test_step)
+    writer.add_scalar("test_accuracy", total_accuracy / test_data_size, total_test_step)
     total_test_step = total_test_step + 1
 
     torch.save(tudui, "tudui_{}.pth".format(i))

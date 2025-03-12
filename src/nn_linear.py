@@ -7,10 +7,15 @@ from torch import nn
 from torch.nn import Linear
 from torch.utils.data import DataLoader
 
-dataset = torchvision.datasets.CIFAR10("../data", train=False, transform=torchvision.transforms.ToTensor(),
-                                       download=True)
+dataset = torchvision.datasets.CIFAR10(
+    "../dataset",
+    train=False,
+    transform=torchvision.transforms.ToTensor(),
+    download=True,
+)
 
 dataloader = DataLoader(dataset, batch_size=64, drop_last=True)
+
 
 class Tudui(nn.Module):
     def __init__(self):
@@ -20,6 +25,7 @@ class Tudui(nn.Module):
     def forward(self, input):
         output = self.linear1(input)
         return output
+
 
 tudui = Tudui()
 

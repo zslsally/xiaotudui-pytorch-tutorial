@@ -8,10 +8,15 @@ from torch.nn import Sequential, Conv2d, MaxPool2d, Flatten, Linear
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader
 
-dataset = torchvision.datasets.CIFAR10("../data", train=False, transform=torchvision.transforms.ToTensor(),
-                                       download=True)
+dataset = torchvision.datasets.CIFAR10(
+    "../dataset",
+    train=False,
+    transform=torchvision.transforms.ToTensor(),
+    download=True,
+)
 
 dataloader = DataLoader(dataset, batch_size=1)
+
 
 class Tudui(nn.Module):
     def __init__(self):
@@ -25,7 +30,7 @@ class Tudui(nn.Module):
             MaxPool2d(2),
             Flatten(),
             Linear(1024, 64),
-            Linear(64, 10)
+            Linear(64, 10),
         )
 
     def forward(self, x):
@@ -38,12 +43,12 @@ tudui = Tudui()
 optim = torch.optim.SGD(tudui.parameters(), lr=0.01)
 for epoch in range(20):
     running_loss = 0.0
-    for data in dataloader:
+    for data in dataloader:  # 把所有data都跑一遍
         imgs, targets = data
         outputs = tudui(imgs)
         result_loss = loss(outputs, targets)
-        optim.zero_grad()
-        result_loss.backward()
-        optim.step()
+        optim.zero_grad()  # grad清零，上一次grad不清零会累加
+        result_loss.backward()  # 反向传播，计算grad
+        optim.step()  # 用grad更新参数
         running_loss = running_loss + result_loss
     print(running_loss)

@@ -19,12 +19,13 @@ class Tudui(nn.Module):
             MaxPool2d(2),
             Flatten(),
             Linear(1024, 64),
-            Linear(64, 10)
+            Linear(64, 10),
         )
 
     def forward(self, x):
         x = self.model1(x)
         return x
+
 
 tudui = Tudui()
 print(tudui)
@@ -32,6 +33,6 @@ input = torch.ones((64, 3, 32, 32))
 output = tudui(input)
 print(output.shape)
 
-writer = SummaryWriter("../logs_seq")
+writer = SummaryWriter("logs/seq")
 writer.add_graph(tudui, input)
 writer.close()

@@ -8,6 +8,7 @@ from torchvision.utils import make_grid
 
 writer = SummaryWriter("logs")
 
+
 class MyData(Dataset):
 
     def __init__(self, root_dir, image_dir, label_dir, transform):
@@ -30,20 +31,23 @@ class MyData(Dataset):
         label_item_path = os.path.join(self.root_dir, self.label_dir, label_name)
         img = Image.open(img_item_path)
 
-        with open(label_item_path, 'r') as f:
+        with open(label_item_path, "r") as f:
             label = f.readline()
 
         # img = np.array(img)
         img = self.transform(img)
-        sample = {'img': img, 'label': label}
+        sample = {"img": img, "label": label}
         return sample
 
     def __len__(self):
         assert len(self.image_list) == len(self.label_list)
         return len(self.image_list)
 
-if __name__ == '__main__':
-    transform = transforms.Compose([transforms.Resize((256, 256)), transforms.ToTensor()])
+
+if __name__ == "__main__":
+    transform = transforms.Compose(
+        [transforms.Resize((256, 256)), transforms.ToTensor()]
+    )  # 对图片进行变换（相同大小等等）
     root_dir = "dataset/train"
     image_ants = "ants_image"
     label_ants = "ants_label"
@@ -56,7 +60,7 @@ if __name__ == '__main__':
     # transforms = transforms.Compose([transforms.Resize(256, 256)])
     dataloader = DataLoader(train_dataset, batch_size=1, num_workers=2)
 
-    writer.add_image('error', train_dataset[119]['img'])
+    writer.add_image("error", train_dataset[119]["img"])
     writer.close()
     # for i, j in enumerate(dataloader):
     #     # imgs, labels = j
@@ -65,6 +69,3 @@ if __name__ == '__main__':
     #     # writer.add_image("train_data_b2", make_grid(j['img']), i)
     #
     # writer.close()
-
-
-

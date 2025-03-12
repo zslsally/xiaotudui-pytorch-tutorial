@@ -9,9 +9,11 @@ img_array = np.array(img_PIL)
 print(type(img_array))
 print(img_array.shape)
 
-writer.add_image("train", img_array, 1, dataformats='HWC')
+writer.add_image(
+    "train", img_array, 1, dataformats="HWC"
+)  # dataformats: shape/dimensions of image
 # y = 2x
 for i in range(100):
-    writer.add_scalar("y=2x", 3*i, i)
+    writer.add_scalar("y=2x", 3 * i, i)  # add scalar to tensorboard
 
 writer.close()
